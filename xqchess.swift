@@ -24,6 +24,12 @@ enum PieceType: String {
     case BPAWN="p"
 }
 
+extension StringProtocol {
+    subscript(offset: Int) -> Character {
+        self[index(startIndex, offsetBy: offset)]
+    }
+}
+
 struct Point {
     // (0, 0) will be at top-left
     var x = 0, y = 0
@@ -237,27 +243,64 @@ class Game {
     }
     
     final func newGame() {
-        board = createDefaultBoard()
+        let fen: String = "rheakaehr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RHEAKAEHR w - - 0 1"
+        board = createBoardFromFenStr(fen: fen)
     }
     final func displayBoard() -> () {
         board?.displayBoard()
     }
     
-    func createDefaultBoard() -> Board {
+    func createBoardFromFenStr(fen: String) -> Board {
         let board: Board = Board()
         let factory: Factory = Factory()
         
-        let rrook = factory.createInstance(piece: .RROOK, at: Point(x: 1, y: 1))
-        let _ = board.addPiece(piece: rrook)
+        let RANK_TOP = 0
+        let RANK_BOTTOM = 9
+        let FILE_LEFT = 0
+        let FILE_RIGHT = 8
         
-        let brook = factory.createInstance(piece: .BROOK, at: Point(x: 2, y: 2))
-        let _ = board.addPiece(piece: brook)
+        var x = RANK_TOP, y = FILE_LEFT
+        var index = 0
+        
+        if index == fen.count {
+            return board
+        }
+        
+        var c = fen[index]
+        while c != " " {
+            if c == "/" {
+                x = FILE_LEFT
+                y += 1
+                if y > RANK_BOTTOM {
+                    break
+                }
+            } else if c >= "1" && c <= "9" {
+                let range = c.unicodeScalars.first!.value - "0".unicodeScalars.first!.value
+                for _ in 0..<range {
+                    if x >= FILE_RIGHT {
+                        break
+                    }
+                    x += 1
+                }
+            } else if ((c >= "A" && c <= "Z")||(c >= "a" && c <= "z")) {
+                if x <= FILE_RIGHT {
+                    guard let type = PieceType(rawValue: String(c)) else {
+                        fatalError("invalid fen string!")
+                        return board
+                    }
+                    let piece = factory.createInstance(piece: type, at: Point(x: x, y: y))
+                    let _ = board.addPiece(piece: piece)
+                    x += 1
+                }
+            }
+            index += 1
+            if (index == fen.count) {
+                return board
+            }
+            c = fen[index]
+        }
         
         return board
-    }
-    func createBoardFromFenStr(fen: String) -> Board? {
-        //TODO:
-        return nil
     }
     
     final func start() {
