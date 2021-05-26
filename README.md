@@ -2,7 +2,7 @@
 cotuong for iOS
 
 ## How to run
-1.run: `swift -suppress-warnings xqchess.swift`
+1. run: `swift -suppress-warnings xqchess.playground/Contents.swift`
 ```
 1- new game
 2- display board

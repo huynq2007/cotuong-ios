@@ -48,40 +48,40 @@ class Board: IBoard {
         }
     }
     
-    final func isValidMovement(piece: Piece, to position: Point) -> Bool {
+    func isValidMovement(piece: Piece, to position: Point) -> Bool {
         return piece.validateMovement(to: position, status: boardState)
     }
     
-    final func makeMovement(piece: Piece, to position: Point) -> Bool {
+    func makeMovement(piece: Piece, to position: Point) -> Bool {
+        
         if !isValidMovement(piece: piece, to: position) {
             return false
         }
-
         if let targetPiece = boardState[position.y][position.x] {
-            let _ = removePiece(piece: targetPiece)
-        }
-        let _ = addPiece(piece: piece)
+            if !removePiece(piece: targetPiece) {
+                return false
+            }
+        }        
+        removePiece(piece: piece)
         
+        piece.currentPosition?.x = position.x
+        piece.currentPosition?.y = position.y
+        if !addPiece(piece: piece) {
+            return false
+        }
         return true
     }
     
-    final func addPiece(piece: Piece) -> Bool {
-        guard let x = piece.currentPosition?.x else {
-            return false
-        }
-        guard let y = piece.currentPosition?.y else {
-            return false
-        }
-        if (!removePiece(piece: piece)) {
-            return false
-        }
+    func addPiece(piece: Piece) -> Bool {
         
+        guard let x = piece.currentPosition?.x, let y = piece.currentPosition?.y else {
+            return false
+        }
         boardState[y][x] = piece
-        
         return true
     }
     
-    final func removePiece(piece: Piece) -> Bool {
+    func removePiece(piece: Piece) -> Bool {
         guard let x = piece.currentPosition?.x else {
             return false
         }
@@ -94,7 +94,7 @@ class Board: IBoard {
         return true
     }
     
-    final func displayBoard() {
+    func displayBoard() {
         for y in 0..<Config.Y_SIZE {
             var line: String = ""
             for x in 0..<Config.X_SIZE {
@@ -129,8 +129,8 @@ class Piece: CustomStringConvertible {
     init () {
     }
         
-    final func moveTo(to position: Point) {
-        let _ = board?.makeMovement(piece: self, to: position)
+    final func moveTo(to position: Point) -> Bool {
+        return board!.makeMovement(piece: self, to: position)
     }
     
     func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
@@ -141,49 +141,49 @@ class Piece: CustomStringConvertible {
 class Advisor : Piece {
     override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
         //TODO:
-        return false
+        return true
     }
 }
 
 class Cannon : Piece {
     override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
         //TODO:
-        return false
+        return true
     }
 }
 
 class Elephant : Piece {
     override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
         //TODO:
-        return false
+        return true
     }
 }
 
 class Horse : Piece {
     override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
         //TODO:
-        return false
+        return true
     }
 }
 
 class King : Piece {
     override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
         //TODO:
-        return false
+        return true
     }
 }
 
 class Pawn : Piece {
     override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
         //TODO:
-        return false
+        return true
     }
 }
 
 class Rook : Piece {
     override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
         //TODO:
-        return false
+        return true
     }
 }
 
@@ -242,12 +242,39 @@ class Game {
         }
     }
     
-    final func newGame() {
+    func newGame() {
         let fen: String = "rheakaehr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RHEAKAEHR w - - 0 1"
         board = createBoardFromFenStr(fen: fen)
     }
-    final func displayBoard() -> () {
+    func displayBoard() -> () {
         board?.displayBoard()
+    }
+    
+    func makeMovement() {
+        print("make a move from (x1,y1) to (x2,y2):")
+        let input: String? = readLine()
+        guard let position = input?.split(separator: " ") else {
+            print("invalid input!")
+            return
+        }
+        if position.count != 4 {
+            print("invalid input!")
+            return
+        }
+        guard let x1 = Int(position[0]), let y1 = Int(position[1]), let x2 = Int(position[2]), let y2 = Int(position[3]) else {
+            print("invalid input!")
+            return
+        }
+        
+        guard let selectedPiece = board?.boardState[y1][x1] else {
+            print("invalid input!")
+            return
+        }
+        
+        if !selectedPiece.moveTo(to: Point(x: x2, y: y2)) {
+            print("cannot move!")
+            return
+        }
     }
     
     func createBoardFromFenStr(fen: String) -> Board {
@@ -286,9 +313,9 @@ class Game {
                 if x <= FILE_RIGHT {
                     guard let type = PieceType(rawValue: String(c)) else {
                         fatalError("invalid fen string!")
-                        return board
                     }
                     let piece = factory.createInstance(piece: type, at: Point(x: x, y: y))
+                    piece.board = board as IBoard
                     let _ = board.addPiece(piece: piece)
                     x += 1
                 }
@@ -303,11 +330,12 @@ class Game {
         return board
     }
     
-    final func start() {
+    func start() {
         let actions = [
             Action(name: "1", description: "new game", execution: newGame),
             Action(name: "2", description: "display board", execution: displayBoard),
-            Action(name: "3", description: "quit game")
+            Action(name: "3", description: "make movement", execution: makeMovement),
+            Action(name: "4", description: "quit game")
         ]
         
         var selectedOption: Action?
