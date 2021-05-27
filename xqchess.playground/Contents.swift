@@ -127,7 +127,7 @@ class Piece: CustomStringConvertible, IPiece {
         return board!.makeMovement(piece: self, to: position)
     }
     
-    func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
+    func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {
         fatalError("not implemented yet!")
     }
     
@@ -138,50 +138,175 @@ class Piece: CustomStringConvertible, IPiece {
 }
 
 class Advisor : Piece {
-    override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
-        //TODO:
+    override func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {
+        let deltaX = abs(currentPosition!.x - position.x)
+        let deltaY = abs(currentPosition!.y - position.y)
+        if (deltaX != 1 || deltaY != 1) {
+            return false
+        }
+        if (position.x < 3 || position.x > 5) {
+            return false
+        }
+        if (color == PieceColor.BLACK && position.y > 2) {
+            return false
+        }
+        if (color == PieceColor.RED && position.y < 7) {
+            return false
+        }
         return true
     }
 }
 
 class Cannon : Piece {
-    override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
-        //TODO:
+    override func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {
+        let deltaX = abs(currentPosition!.x - position.x)
+        let deltaY = abs(currentPosition!.y - position.y)
+        if(deltaX > 0 && deltaY > 0) {
+            return false
+        }
+        var blockCount = 0
+        if (currentPosition!.x == position.x) {
+            let minY = min(currentPosition!.y, position.y)
+            let maxY = max(currentPosition!.y, position.y)
+            for step in minY + 1..<maxY {
+                if let _ = board[step][currentPosition!.x] {
+                    blockCount += 1
+                }
+            }
+        } else if (currentPosition!.y == position.y) {
+            let minX = min(currentPosition!.x, position.x)
+            let maxX = max(currentPosition!.x, position.x)
+            for step in minX + 1..<maxX {
+                if let _ = board[currentPosition!.y][step] {
+                    blockCount += 1
+                }
+            }
+        }
+        if let piece = board[position.y][position.x] {
+            if (piece.color != self.color) {
+                if blockCount > 1 {
+                    return false
+                }
+            }else {
+                return false
+            }
+        }else {
+            if blockCount > 0 {
+                return false
+            }
+        }
+        
         return true
     }
 }
 
 class Elephant : Piece {
-    override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
-        //TODO:
+    override func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {
+        let deltaX = abs(currentPosition!.x - position.x)
+        let deltaY = abs(currentPosition!.y - position.y)
+        if (deltaX != 2 || deltaY != 2) {
+            return false
+        }
+        if (color == PieceColor.BLACK && position.y > 4) {
+            return false
+        }
+        if (color == PieceColor.RED && position.y < 5) {
+            return false
+        }
         return true
     }
 }
 
 class Horse : Piece {
-    override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
-        //TODO:
+    override func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {
+        let deltaX = abs(currentPosition!.x - position.x)
+        let deltaY = abs(currentPosition!.y - position.y)
+        if (deltaX == 0 || deltaY == 0 || deltaX + deltaY != 3) {
+            return false
+        }
+        if (deltaX == 2) {
+            if let _ = board[position.y][(currentPosition!.x + position.x)/2] {
+                return false
+            }
+        }
+        if (deltaY == 2) {
+            if let _ = board[(currentPosition!.y + position.y)/2][position.x] {
+                return false
+            }
+        }
         return true
     }
 }
 
 class King : Piece {
-    override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
-        //TODO:
+    override func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {
+        let deltaX = abs(currentPosition!.x - position.x)
+        let deltaY = abs(currentPosition!.y - position.y)
+        if (deltaY + deltaX != 1) {
+            return false
+        }
+        if (position.x < 3 || position.x > 5) {
+            return false
+        }
+        if (color == PieceColor.BLACK && position.y > 2) {
+            return false
+        }
+        if (color == PieceColor.RED && position.y < 7) {
+            return false
+        }
         return true
     }
 }
 
 class Pawn : Piece {
-    override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
-        //TODO:
+    override func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {
+        let deltaX = abs(currentPosition!.x - position.x)
+        let deltaY = abs(currentPosition!.y - position.y)
+        if(deltaX + deltaY >= 2) {
+            return false
+        }
+        if (color == PieceColor.RED) {
+            if position.y > currentPosition!.y {
+                return false
+            }
+            if currentPosition!.y >= 5 && deltaX == 1 {
+                return false
+            }
+        }
+        if (color == PieceColor.BLACK) {
+            if currentPosition!.y > position.y {
+                return false
+            }
+            if currentPosition!.y < 5 && deltaX == 1 {
+                return false
+            }
+        }
         return true
     }
 }
 
 class Rook : Piece {
-    override func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
-        //TODO:
+    override func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {
+        let deltaX = abs(currentPosition!.x - position.x)
+        let deltaY = abs(currentPosition!.y - position.y)
+        if(deltaX > 0 && deltaY > 0) {
+            return false
+        }
+        
+        if (currentPosition!.x == position.x) {
+            for step in currentPosition!.y + 1..<position.y {
+                if let _ = board[step][currentPosition!.x] {
+                    return false
+                }
+            }
+        }else if (currentPosition!.y == position.y) {
+            for step in currentPosition!.x + 1..<position.x {
+                if let _ = board[step][currentPosition!.x] {
+                    return false
+                }
+            }
+        }
+        
         return true
     }
 }
