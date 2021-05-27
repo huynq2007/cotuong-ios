@@ -1,3 +1,12 @@
+//
+//  Game.swift
+//  cotuong-ios
+//
+//  Created by hnguyen on 5/27/21.
+//
+
+import Foundation
+
 enum PieceColor: String {
     case RED = "\u{001B}[0;31m" , BLACK = "\u{001B}[0;34m", CLEAR = "\u{001B}[0;0m"
 }
@@ -133,7 +142,7 @@ class Piece: CustomStringConvertible, IPiece {
     
     final func attachToBoard(to board: IBoard) -> () {
         self.board = board
-        board.addPiece(piece: self, to: nil)
+        let _ = board.addPiece(piece: self, to: nil)
     }
 }
 
@@ -318,7 +327,7 @@ class Factory {
         self.board = board
     }
     
-    func createInstance(piece type: PieceType, at position: Point) -> Piece {
+    func createInstance(piece type: PieceType, at position: Point) -> () {
         let piece: Piece
         
         switch type {
@@ -352,7 +361,6 @@ class Factory {
             piece = Piece(at: position, color: .BLACK)
         }
         piece.attachToBoard(to: self.board)
-        return piece
     }
 }
 
@@ -479,6 +487,3 @@ class Game {
         }
     }
 }
-
-let game = Game()
-game.start()
