@@ -1,5 +1,5 @@
 enum PieceColor: String {
-    case RED = "\u{001B}[0;31m" , BLACK = "\u{001B}[0;34m", NONE = "\u{001B}[0;0m"
+    case RED = "\u{001B}[0;31m" , BLACK = "\u{001B}[0;34m", CLEAR = "\u{001B}[0;0m"
 }
 
 struct Config {
@@ -37,64 +37,57 @@ struct Point {
 
 protocol IBoard {
     func makeMovement(piece: Piece, to position: Point) -> Bool
+    func addPiece(piece: Piece, to position: Point?) -> Bool
+    func displayBoard() -> ()
+    func getPieceAt(x: Int, y: Int) -> Piece?
 }
 
 class Board: IBoard {
-    var boardState: [[Piece?]] = Array.init(repeating: Array.init(repeating: nil, count: Config.X_SIZE), count: Config.Y_SIZE)
+    private var boardState: [[Piece?]] = Array.init(repeating: Array.init(repeating: nil, count: Config.X_SIZE), count: Config.Y_SIZE)
     
-    subscript (x: Int, y: Int) -> Piece? {
-        get {
-            return boardState[y][x]
-        }
+    func getPieceAt(x: Int, y: Int) -> Piece? {
+        return boardState[y][x]
     }
     
-    func isValidMovement(piece: Piece, to position: Point) -> Bool {
+    private func isValidMovement(of piece: Piece, to position: Point) -> Bool {
         return piece.validateMovement(to: position, status: boardState)
     }
     
     func makeMovement(piece: Piece, to position: Point) -> Bool {
-        
-        if !isValidMovement(piece: piece, to: position) {
+        if !isValidMovement(of: piece, to: position) {
             return false
         }
         if let targetPiece = boardState[position.y][position.x] {
             if !removePiece(piece: targetPiece) {
                 return false
             }
-        }        
-        removePiece(piece: piece)
-        
-        piece.currentPosition?.x = position.x
-        piece.currentPosition?.y = position.y
-        if !addPiece(piece: piece) {
+        }
+        if !removePiece(piece: piece) {
+            return false
+        }
+        if !addPiece(piece: piece, to: position) {
             return false
         }
         return true
     }
     
-    func addPiece(piece: Piece) -> Bool {
-        
+    func addPiece(piece: Piece, to position: Point? = nil) -> Bool {
+        if position != nil {
+            piece.currentPosition = Point(x: position!.x, y: position!.y)
+        }
+        boardState[piece.currentPosition!.y][piece.currentPosition!.x] = piece
+        return true
+    }
+    
+    private func removePiece(piece: Piece) -> Bool {
         guard let x = piece.currentPosition?.x, let y = piece.currentPosition?.y else {
             return false
         }
-        boardState[y][x] = piece
-        return true
-    }
-    
-    func removePiece(piece: Piece) -> Bool {
-        guard let x = piece.currentPosition?.x else {
-            return false
-        }
-        guard let y = piece.currentPosition?.y else {
-            return false
-        }
-        
         boardState[y][x] = nil
-        
         return true
     }
     
-    func displayBoard() {
+    func displayBoard() -> () {
         for y in 0..<Config.Y_SIZE {
             var line: String = ""
             for x in 0..<Config.X_SIZE {
@@ -109,32 +102,38 @@ class Board: IBoard {
     }
 }
 
-class Piece: CustomStringConvertible {
-    var board: IBoard?
+protocol IPiece {
+    func attachToBoard(to board: IBoard)
+}
+
+class Piece: CustomStringConvertible, IPiece {
+    private var board: IBoard?
     var currentPosition: Point?
     var color: PieceColor?
     var fenChar: Character {
         get {
-            return Array(String(describing: type(of: self)))[0]
+            return String(describing: type(of: self))[0]
         }
     }
     
-    var description: String { return "\(color!.rawValue) [\(fenChar),\(String(describing: currentPosition!.x)),\(String(describing: currentPosition!.y))] \(PieceColor.NONE.rawValue)"}
+    var description: String { return "\(color!.rawValue) [\(fenChar),\(String(describing: currentPosition!.x)),\(String(describing: currentPosition!.y))] \(PieceColor.CLEAR.rawValue)"}
     
-    init (position: Point, color: PieceColor) {
+    init (at position: Point, color: PieceColor) {
         self.currentPosition = Point(x: position.x, y: position.y)
         self.color = color
     }
     
-    init () {
-    }
-        
     final func moveTo(to position: Point) -> Bool {
         return board!.makeMovement(piece: self, to: position)
     }
     
     func validateMovement(to position: Point, status board: [[Piece?]]?) -> Bool {
         fatalError("not implemented yet!")
+    }
+    
+    final func attachToBoard(to board: IBoard) -> () {
+        self.board = board
+        board.addPiece(piece: self, to: nil)
     }
 }
 
@@ -188,39 +187,46 @@ class Rook : Piece {
 }
 
 class Factory {
+    private var board: IBoard
+    
+    init (board: IBoard) {
+        self.board = board
+    }
+    
     func createInstance(piece type: PieceType, at position: Point) -> Piece {
         let piece: Piece
         
         switch type {
         case .RROOK:
-            piece = Rook(position: position, color: .RED)
+            piece = Rook(at: position, color: .RED)
         case .BROOK:
-            piece = Rook(position: position, color: .BLACK)
+            piece = Rook(at: position, color: .BLACK)
         case .RHORSE:
-            piece = Horse(position: position, color: .RED)
+            piece = Horse(at: position, color: .RED)
         case .BHORSE:
-            piece = Horse(position: position, color: .BLACK)
+            piece = Horse(at: position, color: .BLACK)
         case .RELEPHANT:
-            piece = Elephant(position: position, color: .RED)
+            piece = Elephant(at: position, color: .RED)
         case .BELEPHANT:
-            piece = Elephant(position: position, color: .BLACK)
+            piece = Elephant(at: position, color: .BLACK)
         case .RADVISOR:
-            piece = Advisor(position: position, color: .RED)
+            piece = Advisor(at: position, color: .RED)
         case .BADVISOR:
-            piece = Advisor(position: position, color: .BLACK)
+            piece = Advisor(at: position, color: .BLACK)
         case .RKING:
-            piece = King(position: position, color: .RED)
+            piece = King(at: position, color: .RED)
         case .BKING:
-            piece = King(position: position, color: .BLACK)
+            piece = King(at: position, color: .BLACK)
         case .RCANON:
-            piece = Cannon(position: position, color: .RED)
+            piece = Cannon(at: position, color: .RED)
         case .BCANON:
-            piece = Cannon(position: position, color: .BLACK)
+            piece = Cannon(at: position, color: .BLACK)
         case .RPAWN:
-            piece = Piece(position: position, color: .RED)
+            piece = Piece(at: position, color: .RED)
         case .BPAWN:
-            piece = Piece(position: position, color: .BLACK)
+            piece = Piece(at: position, color: .BLACK)
         }
+        piece.attachToBoard(to: self.board)
         return piece
     }
 }
@@ -229,7 +235,7 @@ class Game {
     var red_player: String = "hoge"
     var black_player: String = "foo"
     var turn_player: PieceColor = .RED
-    var board: Board?
+    var board: IBoard?
     
     struct Action: Equatable {
         var name: String = "name"
@@ -242,7 +248,7 @@ class Game {
         }
     }
     
-    func newGame() {
+    func newGame() -> () {
         let fen: String = "rheakaehr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RHEAKAEHR w - - 0 1"
         board = createBoardFromFenStr(fen: fen)
     }
@@ -250,7 +256,7 @@ class Game {
         board?.displayBoard()
     }
     
-    func makeMovement() {
+    func makeMovement() -> () {
         print("make a move from (x1,y1) to (x2,y2):")
         let input: String? = readLine()
         guard let position = input?.split(separator: " ") else {
@@ -266,7 +272,7 @@ class Game {
             return
         }
         
-        guard let selectedPiece = board?.boardState[y1][x1] else {
+        guard let selectedPiece = board?.getPieceAt(x: x1, y: y1) else {
             print("invalid input!")
             return
         }
@@ -277,9 +283,9 @@ class Game {
         }
     }
     
-    func createBoardFromFenStr(fen: String) -> Board {
-        let board: Board = Board()
-        let factory: Factory = Factory()
+    func createBoardFromFenStr(fen: String) -> IBoard {
+        let board: IBoard = Board() as IBoard
+        let factory: Factory = Factory(board: board)
         
         let RANK_TOP = 0
         let RANK_BOTTOM = 9
@@ -314,9 +320,7 @@ class Game {
                     guard let type = PieceType(rawValue: String(c)) else {
                         fatalError("invalid fen string!")
                     }
-                    let piece = factory.createInstance(piece: type, at: Point(x: x, y: y))
-                    piece.board = board as IBoard
-                    let _ = board.addPiece(piece: piece)
+                    factory.createInstance(piece: type, at: Point(x: x, y: y))
                     x += 1
                 }
             }
@@ -330,7 +334,7 @@ class Game {
         return board
     }
     
-    func start() {
+    func start() -> () {
         let actions = [
             Action(name: "1", description: "new game", execution: newGame),
             Action(name: "2", description: "display board", execution: displayBoard),
