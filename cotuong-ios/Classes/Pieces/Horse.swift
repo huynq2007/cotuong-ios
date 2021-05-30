@@ -26,4 +26,8 @@ class Horse : Piece {
         }
         return true
     }
+    
+    override func getFace() -> String {
+        return self.pieceColor == PieceColor.RED ? "red-horse" : "black-horse"
+    }
 }

@@ -6,30 +6,42 @@
 //
 
 import Foundation
+import UIKit
 
 protocol IPiece {
     func attachToBoard(to board: IBoard)
 }
 
-class Piece: CustomStringConvertible, IPiece {
+class Piece: PieceView, IPiece {
     private var board: IBoard?
     var currentPosition: Point?
-    var color: PieceColor?
+    var pieceColor: PieceColor?
     var fenChar: Character {
         get {
             return String(describing: type(of: self))[0]
         }
     }
     
-    var description: String { return "\(color!.rawValue) [\(fenChar),\(String(describing: currentPosition!.x)),\(String(describing: currentPosition!.y))] \(PieceColor.CLEAR.rawValue)"}
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
     
     init (at position: Point, color: PieceColor) {
+        super.init(frame: .zero)
+                
         self.currentPosition = Point(x: position.x, y: position.y)
-        self.color = color
+        self.pieceColor = color       
     }
+    
+    override var description: String { return "\(pieceColor!.rawValue) [\(fenChar),\(String(describing: currentPosition!.x)),\(String(describing: currentPosition!.y))] \(PieceColor.CLEAR.rawValue)"}
+        
     
     final func moveTo(to position: Point) -> Bool {
         return board!.makeMovement(piece: self, to: position)
+    }
+    
+    func getFace() -> String {
+        return "default"
     }
     
     func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {

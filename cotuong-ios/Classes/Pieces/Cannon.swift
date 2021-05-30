@@ -33,7 +33,7 @@ class Cannon : Piece {
             }
         }
         if let piece = board[position.y][position.x] {
-            if (piece.color != self.color) {
+            if (piece.pieceColor != self.pieceColor) {
                 if blockCount > 1 {
                     return false
                 }
@@ -47,5 +47,9 @@ class Cannon : Piece {
         }
         
         return true
+    }
+    
+    override func getFace() -> String {
+        return self.pieceColor == PieceColor.RED ? "red-cannon" : "black-cannon"
     }
 }

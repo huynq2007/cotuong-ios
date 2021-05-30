@@ -14,7 +14,7 @@ class Pawn : Piece {
         if(deltaX + deltaY >= 2) {
             return false
         }
-        if (color == PieceColor.RED) {
+        if (pieceColor == PieceColor.RED) {
             if position.y > currentPosition!.y {
                 return false
             }
@@ -22,7 +22,7 @@ class Pawn : Piece {
                 return false
             }
         }
-        if (color == PieceColor.BLACK) {
+        if (pieceColor == PieceColor.BLACK) {
             if currentPosition!.y > position.y {
                 return false
             }
@@ -31,5 +31,9 @@ class Pawn : Piece {
             }
         }
         return true
+    }
+    
+    override func getFace() -> String {
+        return self.pieceColor == PieceColor.RED ? "red-pawn" : "black-pawn"
     }
 }

@@ -14,7 +14,13 @@ protocol IBoard {
     func getPieceAt(x: Int, y: Int) -> Piece?
 }
 
-class Board: IBoard {
+class Board: BoardView, IBoard {
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    init() {
+        super.init(frame: .zero)
+    }
     private var boardState: [[Piece?]] = Array.init(repeating: Array.init(repeating: nil, count: Config.X_SIZE), count: Config.Y_SIZE)
     
     func getPieceAt(x: Int, y: Int) -> Piece? {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Rook : Piece {
+class Rook : Piece {    
     override func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {
         let deltaX = abs(currentPosition!.x - position.x)
         let deltaY = abs(currentPosition!.y - position.y)
@@ -30,5 +30,9 @@ class Rook : Piece {
         }
         
         return true
+    }
+    
+    override func getFace() -> String {
+        return self.pieceColor == PieceColor.RED ? "red-rook" : "black-rook"
     }
 }

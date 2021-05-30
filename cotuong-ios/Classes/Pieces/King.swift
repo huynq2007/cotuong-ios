@@ -17,12 +17,16 @@ class King : Piece {
         if (position.x < 3 || position.x > 5) {
             return false
         }
-        if (color == PieceColor.BLACK && position.y > 2) {
+        if (pieceColor == PieceColor.BLACK && position.y > 2) {
             return false
         }
-        if (color == PieceColor.RED && position.y < 7) {
+        if (pieceColor == PieceColor.RED && position.y < 7) {
             return false
         }
         return true
+    }
+    
+    override func getFace() -> String {
+        return self.pieceColor == PieceColor.RED ? "red-king" : "black-king"
     }
 }

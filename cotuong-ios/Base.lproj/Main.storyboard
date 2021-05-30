@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Start View Controller-->
+        <!--Co Tuong-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="StartViewController" customModule="cotuong_ios" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="start_vc" id="BYZ-38-t0r" customClass="StartViewController" customModule="cotuong_ios" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -50,7 +50,7 @@
                             <constraint firstItem="pCS-iP-wj9" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="pJq-bZ-k8b"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="uI3-go-bmp"/>
+                    <navigationItem key="navigationItem" title="Co Tuong" id="uI3-go-bmp"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -59,7 +59,7 @@
         <!--Game-->
         <scene sceneID="yPe-S8-hnh">
             <objects>
-                <viewController id="fwm-Sq-T1p" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="game_vc" id="fwm-Sq-T1p" customClass="GameViewController" customModule="cotuong_ios" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qhK-1H-6hE" customClass="GameView" customModule="cotuong_ios" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -70,17 +70,29 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1jB-EN-haF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2555.072463768116" y="83.705357142857139"/>
+            <point key="canvasLocation" x="2555.072463768116" y="83.152173913043484"/>
         </scene>
         <!--Setting-->
         <scene sceneID="427-zT-XjU">
             <objects>
-                <viewController id="yCb-Ji-g8k" customClass="SettingViewController" customModule="cotuong_ios" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="setting_vc" id="yCb-Ji-g8k" customClass="SettingViewController" customModule="cotuong_ios" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Hmo-hH-lov">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rBb-G3-pAe">
+                                <rect key="frame" x="182.66666666666666" y="352.66666666666669" width="51" height="31"/>
+                                <connections>
+                                    <action selector="toggle:" destination="yCb-Ji-g8k" eventType="valueChanged" id="Udg-eJ-LGM"/>
+                                </connections>
+                            </switch>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="fge-s8-4va"/>
                         <color key="backgroundColor" systemColor="systemTealColor"/>
+                        <constraints>
+                            <constraint firstItem="rBb-G3-pAe" firstAttribute="centerY" secondItem="Hmo-hH-lov" secondAttribute="centerY" id="DEa-uc-cHI"/>
+                            <constraint firstItem="rBb-G3-pAe" firstAttribute="centerX" secondItem="Hmo-hH-lov" secondAttribute="centerX" id="x1M-ZZ-ARf"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Setting" id="vMn-Xe-wD1"/>
                 </viewController>

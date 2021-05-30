@@ -14,12 +14,16 @@ class Elephant : Piece {
         if (deltaX != 2 || deltaY != 2) {
             return false
         }
-        if (color == PieceColor.BLACK && position.y > 4) {
+        if (pieceColor == PieceColor.BLACK && position.y > 4) {
             return false
         }
-        if (color == PieceColor.RED && position.y < 5) {
+        if (pieceColor == PieceColor.RED && position.y < 5) {
             return false
         }
         return true
+    }
+    
+    override func getFace() -> String {
+        return self.pieceColor == PieceColor.RED ? "red-bishop" : "black-bishop"
     }
 }
