@@ -28,20 +28,56 @@ class Piece: PieceView, IPiece {
     
     init (at position: Point, color: PieceColor) {
         super.init(frame: .zero)
-                
         self.currentPosition = Point(x: position.x, y: position.y)
-        self.pieceColor = color       
+        self.pieceColor = color
+        self.setBackgroundImage(UIImage(named: self.getFace()), for: .normal)
+        self.setImage(UIImage(named: "cursor"), for: .selected)
     }
     
     override var description: String { return "\(pieceColor!.rawValue) [\(fenChar),\(String(describing: currentPosition!.x)),\(String(describing: currentPosition!.y))] \(PieceColor.CLEAR.rawValue)"}
-        
+    
     
     final func moveTo(to position: Point) -> Bool {
-        return board!.makeMovement(piece: self, to: position)
+        let result = board!.makeMovement(piece: self, to: position)
+        
+        if !result {
+            MusicHelper.sharedHelper.playSound(for: "illegal")
+            return false
+        }
+        
+        // update GUI
+        let boardView = (board as? BoardView)
+        UIView.animate(withDuration: 0.5, delay: 0, options: [], animations: { () in
+            self.center = (boardView?.boardCoordinates[position.y][position.x])!
+        }) { finished in
+            MusicHelper.sharedHelper.playSound(for: "move")
+            self.isSelected = false
+            
+            // Change Turn
+            if Board.MOVING_TURN == .RED {
+                Board.MOVING_TURN = .BLACK
+            }else {
+                Board.MOVING_TURN = .RED
+            }
+            
+            if Board.MOVING_TURN == .BLACK {
+                //TODO: AI MOVE
+                let baord  = (self.board as! Board)                
+                guard let (from, to) = baord.AI.tryThink() else { return }
+                let _from = Point(x: from.x, y: from.y)
+                let _to = Point(x: to.x, y: to.y)
+                
+                if let piece = baord.getPieceAt(x: _from.x, y: _from.y) {
+                    piece.moveTo(to: _to)
+                }
+            }
+        }
+        
+        return result
     }
     
     func getFace() -> String {
-        return "default"
+        fatalError("not implemented yet!")
     }
     
     func validateMovement(to position: Point, status board: [[Piece?]]) -> Bool {

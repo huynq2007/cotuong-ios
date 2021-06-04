@@ -6,20 +6,26 @@
 //
 
 import Foundation
+import UIKit
 
 protocol IBoard {
     func makeMovement(piece: Piece, to position: Point) -> Bool
     func addPiece(piece: Piece, to position: Point?) -> Bool
-    func displayBoard() -> ()
+    func displayBoard(view controller: UIViewController) -> ()
     func getPieceAt(x: Int, y: Int) -> Piece?
 }
 
 class Board: BoardView, IBoard {
+    
+    final var AI = AIController(thinkingTime: 5)
+    
+    public static var MOVING_TURN: PieceColor = .RED
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     init() {
-        super.init(frame: .zero)
+        super.init(frame: .zero)        
     }
     private var boardState: [[Piece?]] = Array.init(repeating: Array.init(repeating: nil, count: Config.X_SIZE), count: Config.Y_SIZE)
     
@@ -32,6 +38,7 @@ class Board: BoardView, IBoard {
     }
     
     func makeMovement(piece: Piece, to position: Point) -> Bool {
+        let fromPos = Point(x: piece.currentPosition!.x, y: piece.currentPosition!.y)
         if !isValidMovement(of: piece, to: position) {
             return false
         }
@@ -46,6 +53,9 @@ class Board: BoardView, IBoard {
         if !addPiece(piece: piece, to: position) {
             return false
         }
+        
+        //TODO: make engine movement
+        self.AI.makeEngineMove(from: fromPos, to: position)
         return true
     }
     
@@ -65,17 +75,20 @@ class Board: BoardView, IBoard {
         return true
     }
     
-    func displayBoard() -> () {
+    func displayBoard(view controller: UIViewController) -> () {
+        controller.view.addSubview(self)
+        
+        // display pieces
         for y in 0..<Config.Y_SIZE {
-            var line: String = ""
             for x in 0..<Config.X_SIZE {
                 if let piece = boardState[y][x] {
-                    line += String(describing: piece)
-                } else {
-                    line += " [-,-,-] "
+                    let boardView = self as BoardView
+                    let size = boardView.gridWidth
+                    piece.frame = CGRect(origin: .zero, size: CGSize(width: size, height: size))
+                    piece.center = boardView.boardCoordinates[piece.currentPosition!.y][piece.currentPosition!.x]                    
+                    controller.view.addSubview(piece)
                 }
             }
-            print(line)
         }
     }
 }

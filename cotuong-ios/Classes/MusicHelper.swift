@@ -13,7 +13,7 @@ class MusicHelper {
     var audioPlayer: AVAudioPlayer?
     
     func playBackgroundMusic() {
-        let aSound = NSURL(fileURLWithPath: Bundle.main.path(forResource: "music", ofType: "mp3")!)
+        let aSound = NSURL(fileURLWithPath: Bundle.main.path(forResource: "bg-music", ofType: "mp3")!)
         do {
             audioPlayer = try AVAudioPlayer(contentsOf:aSound as URL)
             audioPlayer!.numberOfLoops = -1
@@ -29,5 +29,19 @@ class MusicHelper {
             return
         }
         player.stop()
+    }
+    
+    func playSound(for resource: String) {
+        DispatchQueue.main.async {
+            let aSound = NSURL(fileURLWithPath: Bundle.main.path(forResource: resource, ofType: "mp3")!)
+            do {
+                self.audioPlayer = try AVAudioPlayer(contentsOf:aSound as URL)
+                self.audioPlayer!.numberOfLoops = 0
+                self.audioPlayer!.prepareToPlay()
+                self.audioPlayer!.play()
+            } catch {
+                print("Cannot play the file")
+            }
+        }
     }
 }

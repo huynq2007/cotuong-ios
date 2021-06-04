@@ -21,7 +21,7 @@ class PieceView: UIButton {
         super.init(coder: coder)
         setupView()
         setupConstraints()
-    }
+    }    
     
     func setupView() {        
     }

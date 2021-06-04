@@ -43,9 +43,9 @@ class Factory {
         case .BCANON:
             piece = Cannon(at: position, color: .BLACK)
         case .RPAWN:
-            piece = Piece(at: position, color: .RED)
+            piece = Pawn(at: position, color: .RED)
         case .BPAWN:
-            piece = Piece(at: position, color: .BLACK)
+            piece = Pawn(at: position, color: .BLACK)
         }
         piece.attachToBoard(to: self.board)
     }

@@ -33,7 +33,6 @@ class BoardView: UIView {
     }
     
     func setupConstraints() {
-        
     }
     
     var lineWidth: CGFloat = 1 { didSet { setNeedsDisplay() } }
