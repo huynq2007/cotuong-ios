@@ -27,8 +27,7 @@ class Rook : Piece {
 //                    return false
 //                }
 //            }
-//        }
-        
+//        }        
         return true
     }
     

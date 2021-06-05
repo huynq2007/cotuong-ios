@@ -44,8 +44,7 @@ class Cannon : Piece {
 //            if blockCount > 0 {
 //                return false
 //            }
-//        }
-        
+//        }        
         return true
     }
     

@@ -64,7 +64,22 @@ uint32_t engineThink(const int seconds)
 }
 
 bool doEngineMove(uint32_t eleeyeMove) {
-    printf("engine make a move %.4s", (const char *) &eleeyeMove);
     int move = COORD_MOVE(eleeyeMove);
     return Search.pos.MakeMove(move);
+}
+
+bool isLegalMove(uint32_t eleeyeMove) {
+    int move = COORD_MOVE(eleeyeMove);
+    return Search.pos.LegalMove(move);
+}
+bool isMate() {
+    return Search.pos.IsMate();
+}
+
+bool isInCheck() {
+    return Search.pos.LastMove().ChkChs > 0;
+}
+
+bool isDraw() {
+    return Search.pos.IsDraw();
 }

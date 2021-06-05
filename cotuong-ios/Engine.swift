@@ -14,10 +14,6 @@ struct EleeyeMove {
     var y2: Int8
 }
 
-extension StringProtocol {
-    var asciiValues: [UInt8] { compactMap(\.asciiValue) }
-}
-
 extension AIController {
     internal func asyncTask(task: @escaping (@escaping () -> Void) -> Void) {
         self.taskQueue.async { [weak self] in
@@ -34,17 +30,30 @@ extension AIController {
 class AIController {
     private let taskQueue: DispatchQueue = DispatchQueue(label: "taskQueue")
     private let taskSignal: DispatchSemaphore = DispatchSemaphore(value: 1)
-    private var thinkingTime: Int32 = 5
+    private var gameLevel: GameLevel = .EASY
 
-    init(thinkingTime: Int32){
+    init(gameLevel: GameLevel, fen: String){
         engineInit("OPENBOOK.DAT")
-        let fen = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w"
         engineSetFEN(fen)
-        self.thinkingTime = thinkingTime
+        self.gameLevel = gameLevel
+    }
+    
+    private func toEleeyeMove(from: Point, to: Point) -> UInt32 {
+        let x1 = "a".asciiValues[0] + UInt8(from.x)
+        let y1 = String(9 - from.y).asciiValues[0]
+        let x2 = "a".asciiValues[0] + UInt8(to.x)
+        let y2 = String(9 - to.y).asciiValues[0]
+        var gridMove = EleeyeMove(x1: Int8(x1), y1: Int8(y1), x2: Int8(x2), y2: Int8(y2))
+        
+        let data = Data(bytes:  &gridMove, count: MemoryLayout<EleeyeMove>.stride)
+        let eleeyeMove = data.withUnsafeBytes { pointer in
+            return pointer.load(as: UInt32.self)
+        }
+        return eleeyeMove
     }
 
     func tryThink() -> (from: Point, to: Point)? {
-        var bestMove = engineThink(self.thinkingTime)
+        var bestMove = engineThink(self.gameLevel.rawValue)
         if (bestMove > 0) {
             let data = Data(bytes:  &bestMove, count: MemoryLayout<EleeyeMove>.stride)
             let x1 = UInt8(data[0]) - "a".asciiValues[0]
@@ -56,17 +65,25 @@ class AIController {
         return nil
     }
     
+    func validateMove(from: Point, to: Point) -> Bool {
+        let eleeyeMove = toEleeyeMove(from: from, to: to)
+        return isLegalMove(eleeyeMove)
+    }
+    
+    func validateMateStatus() -> Bool {
+        return isMate()
+    }
+    
+    func validateCheckingStatus() -> Bool {
+        return isInCheck()
+    }
+    
+    func validateDrawStatus() -> Bool {
+        return isDraw()
+    }
+    
     func makeEngineMove(from: Point, to: Point) -> Bool {
-        let x1 = "a".asciiValues[0] + UInt8(from.x)
-        let y1 = String(9 - from.y).asciiValues[0]
-        let x2 = "a".asciiValues[0] + UInt8(to.x)
-        let y2 = String(9 - to.y).asciiValues[0]
-        var gridMove = EleeyeMove(x1: Int8(x1), y1: Int8(y1), x2: Int8(x2), y2: Int8(y2))
-        
-        let data = Data(bytes:  &gridMove, count: MemoryLayout<EleeyeMove>.stride)
-        let eleeyeMove = data.withUnsafeBytes { pointer in
-            return pointer.load(as: UInt32.self)
-        }
+        let eleeyeMove = toEleeyeMove(from: from, to: to)
         return doEngineMove(eleeyeMove)
     }
 

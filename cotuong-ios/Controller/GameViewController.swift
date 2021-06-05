@@ -8,37 +8,24 @@
 import Foundation
 import UIKit
 
-extension UIViewController {
-    
-    func showToast(message : String) {
-        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 75, y: self.view.frame.size.height/2, width: 150, height: 35))
-        toastLabel.backgroundColor = UIColor.purple.withAlphaComponent(0.7)
-        toastLabel.textColor = UIColor.white
-        toastLabel.textAlignment = .center;
-        toastLabel.font = UIFont(name: "Montserrat-Light", size: 12.0)
-        toastLabel.text = message
-        toastLabel.alpha = 1.0
-        toastLabel.layer.cornerRadius = 10;
-        toastLabel.clipsToBounds  =  true
-        self.view.addSubview(toastLabel)
-        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
-            toastLabel.alpha = 0.0
-        }, completion: {(isCompleted) in
-            toastLabel.removeFromSuperview()
-        })
-    } }
-
 class GameViewController: UIViewController {
     
     private var game: Game = Game()
-    //    private var selectedPiece: Piece?
+    private var selectedPieces: [Point] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // do your stuffs here
-        game.newGame(view: self)
-        game.displayBoard()
+        // update screen display region
+        Config.DISPLAY_BOUND = self.view.bounds
+        
+        startGame()
+    }
+    
+    func startGame() {
+        game.newGame(fen: Config.DEFAULT_FEN, level: .EASY)
+        game.displayBoard(on: self)
+        
         registerTapHandler()
     }
     
@@ -47,26 +34,18 @@ class GameViewController: UIViewController {
         tap.numberOfTapsRequired = 1
         (game.board as! BoardView).addGestureRecognizer(tap)
         
-        for y in 0..<Config.Y_SIZE {
-            for x in 0..<Config.X_SIZE {
-                if let piece = game.board?.getPieceAt(x: x, y: y) {
-                    piece.addTarget(self,action: #selector(selectPiece(sender:)), for: .touchUpInside)
-                }
+        game.board?.foreachPiece(action: { (x, y) in
+            if let piece = game.board?.getPieceAt(x: x, y: y) {
+                piece.addTarget(self,action: #selector(selectPiece(sender:)), for: .touchUpInside)
             }
-        }
+        })
     }
     
     @objc func selectPiece(sender: Piece!) {
-        MusicHelper.sharedHelper.playSound(for: "click")
-        if let _ = sender {
-            for y in 0..<Config.Y_SIZE {
-                for x in 0..<Config.X_SIZE {
-                    if let view = game.board?.getPieceAt(x: x, y: y) {
-                        view.isSelected = false
-                    }
-                }
-            }
-            sender.isSelected = true
+        MusicHelper.instancePlayer.playSound(for: "click")
+        self.selectedPieces.append(Point(x: sender.currentPosition!.x, y: sender.currentPosition!.y))
+        if doMovingAction() {
+            selectedPieces.removeAll()
         }
     }
     
@@ -75,25 +54,59 @@ class GameViewController: UIViewController {
         let position = recognizer.location(in: boardView),
             x = round(position.x),
             y = round(position.y)
-        let boardOrigin: CGPoint = boardView.boardCoordinates[0][0]
-        let gridWidth = boardView.gridWidth
-        let boardTermination = boardView.boardCoordinates[9][8]
-        if(y < boardOrigin.y - gridWidth / 2 || y > boardTermination.y + gridWidth / 2) {
+        let boardOrigin: CGPoint = CGPoint(x: Config.START_X, y: Config.START_Y)
+        let boardTermination = CGPoint(x: Config.END_X, y: Config.END_Y)
+        
+        if(y < boardOrigin.y - Config.PIECE_SIZE / 2 || y > boardTermination.y + Config.PIECE_SIZE / 2) {
             return
         }
-        let col = Int(round((x - boardOrigin.x) / gridWidth)),
-            row = Int(round((y - boardOrigin.y) / gridWidth))
+        let col = Int(round((x - boardOrigin.x) / Config.PIECE_SIZE))
+        let row = Int(round((y - boardOrigin.y) / Config.PIECE_SIZE))
         
-        for y in 0..<Config.Y_SIZE {
-            for x in 0..<Config.X_SIZE {
-                if let piece = game.board?.getPieceAt(x: x, y: y), piece.isSelected == true {
-                    let result = piece.moveTo(to: Point(x: col, y: row))
-                    if !result {
-                        self.showToast(message: "Invalid movement!")
-                    }
-                    break
-                }
+        self.selectedPieces.append(Point(x: col, y: row))
+        if doMovingAction() {
+            selectedPieces.removeAll()
+        }
+    }
+    
+    func doMovingAction() -> Bool {
+        
+        if Board.MOVING_TURN == .BLACK {
+            return false
+        }
+        
+        if selectedPieces.count < 2 {
+            return false
+        }
+        
+        if selectedPieces.count > 2 {
+            selectedPieces.remove(at: 0)
+        }
+        
+        let srcPoint = Point(x: selectedPieces[0].x, y: selectedPieces[0].y)
+        let dstPoint = Point(x: selectedPieces[1].x, y: selectedPieces[1].y)
+        
+        guard let srcPiece = game.board?.getPieceAt(x: srcPoint.x, y: srcPoint.y) else {
+            return false
+        }
+        guard let dstPiece = game.board?.getPieceAt(x: dstPoint.x, y: dstPoint.y) else {
+            if !srcPiece.moveTo(to: dstPoint) {
+                showToast(message: "Invalid Movement!")
+                MusicHelper.instancePlayer.playSound(for: "illegal")
+                return false
             }
+            return true
+        }
+        
+        if srcPiece.pieceColor == dstPiece.pieceColor {
+            return false
+        } else {
+            if !srcPiece.moveTo(to: dstPoint) {
+                showToast(message: "Invalid Movement!")
+                MusicHelper.instancePlayer.playSound(for: "illegal")
+                return false
+            }
+            return true
         }
     }
 }

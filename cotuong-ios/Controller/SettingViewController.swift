@@ -18,9 +18,9 @@ class SettingViewController: UIViewController {
     @IBAction func toggle(_ sender: UISwitch) {
         let switcher = sender
         if !switcher.isOn {
-            MusicHelper.sharedHelper.stopBackgroundMusic()
+            MusicHelper.backgroundPlayer.stopBackgroundMusic()
         }else {
-            MusicHelper.sharedHelper.playBackgroundMusic()
+            MusicHelper.backgroundPlayer.playBackgroundMusic()
         }
     }
     

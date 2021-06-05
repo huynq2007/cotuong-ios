@@ -9,21 +9,15 @@ import Foundation
 import UIKit
 
 class Game {
-    var red_player: String = "hoge"
-    var black_player: String = "foo"
-    var turn_player: PieceColor = .RED
     var board: IBoard?
-    var viewController: UIViewController?
     
-    func newGame(view controller: UIViewController) -> () {
-        self.viewController = controller
-        let fen: String = "rheakaehr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RHEAKAEHR w - - 0 1"
+    func newGame(fen: String, level: GameLevel) -> () {
         board = createBoardFromFenStr(fen: fen)
+        (board as! Board).setAIEngine(AI: AIController(gameLevel: level, fen: fen))
     }
     
-    func displayBoard() -> () {
-        (board as? BoardView)?.frame = (viewController?.view.frame)!
-        board?.displayBoard(view: self.viewController!)
+    func displayBoard(on view: UIViewController) -> () {
+        board?.displayBoard(parent: view)
     }
     
     func createBoardFromFenStr(fen: String) -> IBoard {

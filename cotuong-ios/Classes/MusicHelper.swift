@@ -9,7 +9,8 @@ import Foundation
 import AVFoundation
 
 class MusicHelper {
-    static let sharedHelper = MusicHelper()
+    static let backgroundPlayer = MusicHelper()
+    static let instancePlayer = MusicHelper()
     var audioPlayer: AVAudioPlayer?
     
     func playBackgroundMusic() {
@@ -32,16 +33,14 @@ class MusicHelper {
     }
     
     func playSound(for resource: String) {
-        DispatchQueue.main.async {
-            let aSound = NSURL(fileURLWithPath: Bundle.main.path(forResource: resource, ofType: "mp3")!)
-            do {
-                self.audioPlayer = try AVAudioPlayer(contentsOf:aSound as URL)
-                self.audioPlayer!.numberOfLoops = 0
-                self.audioPlayer!.prepareToPlay()
-                self.audioPlayer!.play()
-            } catch {
-                print("Cannot play the file")
-            }
+        let aSound = NSURL(fileURLWithPath: Bundle.main.path(forResource: resource, ofType: "mp3")!)
+        do {
+            self.audioPlayer = try AVAudioPlayer(contentsOf:aSound as URL)
+            self.audioPlayer!.numberOfLoops = 0
+            self.audioPlayer!.prepareToPlay()
+            self.audioPlayer!.play()
+        } catch {
+            print("Cannot play the file")
         }
     }
 }

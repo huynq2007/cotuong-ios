@@ -35,6 +35,7 @@
 		7E8DC334265A025100D8FE20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E8DC333265A025100D8FE20 /* Assets.xcassets */; };
 		7E8DC337265A025100D8FE20 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E8DC335265A025100D8FE20 /* LaunchScreen.storyboard */; };
 		7E8DC36E265A0CAB00D8FE20 /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E8DC36D265A0CAB00D8FE20 /* BoardView.swift */; };
+		7EA942F9266B232000019367 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA942F8266B232000019367 /* Extension.swift */; };
 		7EAC1DB82664EE8200F33E78 /* move2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EAC1DAC2664EE8100F33E78 /* move2.mp3 */; };
 		7EAC1DB92664EE8200F33E78 /* capture2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EAC1DAD2664EE8100F33E78 /* capture2.mp3 */; };
 		7EAC1DBA2664EE8200F33E78 /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EAC1DAE2664EE8100F33E78 /* win.mp3 */; };
@@ -119,6 +120,7 @@
 		7E8DC336265A025100D8FE20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7E8DC338265A025100D8FE20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7E8DC36D265A0CAB00D8FE20 /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
+		7EA942F8266B232000019367 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		7EAC1DAC2664EE8100F33E78 /* move2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = move2.mp3; sourceTree = "<group>"; };
 		7EAC1DAD2664EE8100F33E78 /* capture2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = capture2.mp3; sourceTree = "<group>"; };
 		7EAC1DAE2664EE8100F33E78 /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 		7E8DC329265A025100D8FE20 /* cotuong-ios */ = {
 			isa = PBXGroup;
 			children = (
+				7EA942F6266B230A00019367 /* Extensions */,
 				7E1ED27E26620E2D000F0B0B /* Assets */,
 				7E8DC369265A0C4500D8FE20 /* Controller */,
 				7E8DC368265A0C2F00D8FE20 /* View */,
@@ -247,6 +250,14 @@
 				7ECDA243265FB0B5006FFB97 /* StartViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		7EA942F6266B230A00019367 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				7EA942F8266B232000019367 /* Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		7ECAFEF02666388F00AC6513 /* Frameworks */ = {
@@ -458,6 +469,7 @@
 				7ECDA228265FA33D006FFB97 /* King.swift in Sources */,
 				7ECDA221265FA304006FFB97 /* Piece.swift in Sources */,
 				7ECDA23A265FA3E7006FFB97 /* Factory.swift in Sources */,
+				7EA942F9266B232000019367 /* Extension.swift in Sources */,
 				7ECDA237265FA386006FFB97 /* Pawn.swift in Sources */,
 				7ECDA244265FB0B5006FFB97 /* StartViewController.swift in Sources */,
 				7E1ED27C2662086F000F0B0B /* PieceView.swift in Sources */,

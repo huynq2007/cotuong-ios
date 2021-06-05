@@ -44,8 +44,7 @@ class BoardView: UIView {
     
     private lazy var boardHeight: CGFloat = min(self.bounds.size.width, self.bounds.size.height)
     
-    public lazy var gridWidth: CGFloat = self.boardHeight / self.boardRowsNumber
-    
+    private lazy var gridWidth: CGFloat = self.boardHeight / self.boardRowsNumber
     
     private var boardWidth: CGFloat {
         return gridWidth * boardColsNumber
@@ -54,8 +53,6 @@ class BoardView: UIView {
     private var boardCenter: CGPoint {
         return CGPoint(x: bounds.midX, y: bounds.midY)
     }
-    
-    public lazy var boardCoordinates : [[CGPoint]] = self.calculateBoardCoordinates()
     
     private func calculateBoardCoordinates() -> [[CGPoint]] {
         let startX = boardCenter.x - (boardWidth / 2),
@@ -94,7 +91,7 @@ class BoardView: UIView {
     override func draw(_ rect: CGRect) {
         color.set()
         
-        let m = self.boardCoordinates
+        let m = self.calculateBoardCoordinates()
         
         for i in 0...9 {
             // Draw the horizontal line

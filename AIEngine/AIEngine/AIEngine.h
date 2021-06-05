@@ -30,6 +30,11 @@ void engineSetFEN(const char *fen);
 const char engineGetPieceAt(int file, int rank);
 uint32_t engineThink(const int seconds);
 bool doEngineMove(uint32_t eleeyeMove);
+
+bool isLegalMove(uint32_t eleeyeMove);
+bool isMate();
+bool isInCheck();
+bool isDraw();
     
 #ifdef __cplusplus
 }
