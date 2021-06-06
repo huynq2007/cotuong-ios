@@ -81,5 +81,5 @@ bool isInCheck() {
 }
 
 bool isDraw() {
-    return Search.pos.IsDraw();
+   return (Search.pos.IsDraw() || Search.pos.RepStatus(3) > 0);
 }

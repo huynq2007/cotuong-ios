@@ -20,7 +20,10 @@ class Board: BoardView, IBoard {
     
     final var AI: AIController?
     
-    public static var MOVING_TURN: PieceColor = .RED
+    private var parentController: UIViewController?
+    
+    var MOVING_TURN: PieceColor = .RED
+    var IS_GAME_OVER: Bool = false
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -49,6 +52,10 @@ class Board: BoardView, IBoard {
     
     func makeMovement(piece: Piece, to position: Point) -> Bool {
         
+        if IS_GAME_OVER {
+            return false
+        }
+        
         let _from = Point(x: piece.currentPosition!.x, y: piece.currentPosition!.y)
         let _to = Point(x: position.x, y: position.y)
         let _targetPiece = boardState[position.y][position.x]
@@ -69,10 +76,10 @@ class Board: BoardView, IBoard {
         }
         
         // Change Turn
-        if Board.MOVING_TURN == .RED {
-            Board.MOVING_TURN = .BLACK
+        if self.MOVING_TURN == .RED {
+            self.MOVING_TURN = .BLACK
         }else {
-            Board.MOVING_TURN = .RED
+            self.MOVING_TURN = .RED
         }
         
         // update engine state
@@ -84,26 +91,32 @@ class Board: BoardView, IBoard {
             self.superview?.bringSubviewToFront(piece)
         }) { finished in
             
+            piece.isSelected = false
+            _targetPiece?.removeFromSuperview()
+            
             if (self.AI!.validateMateStatus()) {
-                if Board.MOVING_TURN == .BLACK {
+                if self.MOVING_TURN == .BLACK {
+                    self.IS_GAME_OVER = true
                     MusicHelper.instancePlayer.playSound(for: "win")
+                    self.showAlertDialog(message: "You win!")
                 } else {
+                    self.IS_GAME_OVER = true
                     MusicHelper.instancePlayer.playSound(for: "loss")
+                    self.showAlertDialog(message: "You lose!")
                 }
                 return
             } else if (self.AI!.validateCheckingStatus()) {
                 MusicHelper.instancePlayer.playSound(for: "check2")
             } else if (self.AI!.validateDrawStatus()) {
+                self.IS_GAME_OVER = true
                 MusicHelper.instancePlayer.playSound(for: "draw")
+                self.showAlertDialog(message: "Draw game!")
             } else {
                 MusicHelper.instancePlayer.playSound(for: "move")
+                
+                // wait for AI move
+                self.AIMove()
             }
-            
-            piece.isSelected = false
-            _targetPiece?.removeFromSuperview()
-            
-            // wait for AI move
-            self.AIMove()
         }
         
         #if DEBUG
@@ -114,7 +127,7 @@ class Board: BoardView, IBoard {
     }
     
     func AIMove() {
-        if Board.MOVING_TURN == .BLACK {
+        if self.MOVING_TURN == .BLACK {
             guard let (from, to) = self.AI?.tryThink() else { return }
             if let piece = self.getPieceAt(x: from.x, y: from.y) {
                 let _ = self.makeMovement(piece: piece, to: to)
@@ -139,6 +152,7 @@ class Board: BoardView, IBoard {
     }
     
     func displayBoard(parent view: UIViewController) -> () {
+        self.parentController = view
         self.frame = view.view.frame
         view.view.addSubview(self)
         
@@ -173,6 +187,16 @@ extension Board {
             for x in 0..<Config.X_SIZE {
                 action(x, y)
             }
+        }
+    }
+    
+    func showAlertDialog(message: String) {
+        let alert = UIAlertController(title: "Cotuong-iOS", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            alert.removeFromParent()
+        }))
+        if let _ = self.parentController {
+            self.parentController?.present(alert, animated: true, completion: nil)
         }
     }
 }

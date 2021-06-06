@@ -29,6 +29,21 @@ extension UIViewController {
     }
 }
 
+extension UIViewController {
+    func showAlertMessage(message: String) {
+        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 75, y: self.view.frame.size.height/2, width: 150, height: 35))
+        toastLabel.backgroundColor = UIColor.purple.withAlphaComponent(0.7)
+        toastLabel.textColor = UIColor.white
+        toastLabel.textAlignment = .center;
+        toastLabel.font = UIFont(name: "Montserrat-Light", size: 12.0)
+        toastLabel.text = message
+        toastLabel.alpha = 1.0
+        toastLabel.layer.cornerRadius = 10;
+        toastLabel.clipsToBounds  =  true
+        self.view.addSubview(toastLabel)        
+    }
+}
+
 extension StringProtocol {
     var asciiValues: [UInt8] { compactMap(\.asciiValue) }
     

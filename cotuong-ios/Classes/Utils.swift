@@ -62,8 +62,9 @@ struct Point {
 }
 
 enum GameLevel: Int32 {
-    case EASY = 3
-    case INTER = 5
-    case HARD = 7
-    case SUPER = 15
+    // AI thinking time in seconds
+    case EASY = 5
+    case INTER = 10
+    case HARD = 15
+    case SUPER = 20
 }

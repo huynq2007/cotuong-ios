@@ -23,7 +23,9 @@ class GameViewController: UIViewController {
     }
     
     func startGame() {
-        game.newGame(fen: Config.DEFAULT_FEN, level: .EASY)
+//        let fen = "4kae2/1H2a4/1c2e2c/9/9/9/9/1R2C4/4A4/4K4 w - - 0 1"
+//        game.newGame(fen: fen, level: .EASY)
+        game.newGame(fen: Config.DEFAULT_FEN, level: .HARD)
         game.displayBoard(on: self)
         
         registerTapHandler()
@@ -71,7 +73,11 @@ class GameViewController: UIViewController {
     
     func doMovingAction() -> Bool {
         
-        if Board.MOVING_TURN == .BLACK {
+        if (game.board as! Board).MOVING_TURN == .BLACK {
+            return false
+        }
+        
+        if (game.board as! Board).IS_GAME_OVER {
             return false
         }
         
