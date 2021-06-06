@@ -33,11 +33,11 @@ struct RC4Struct {
     } Seed;
     timeb tb;
     ftime(&tb);
-#ifdef __arm__
+//#ifdef __arm__
     Seed.qw = 0;
-#else
-    Seed.qw = TimeStampCounter();
-#endif
+//#else
+//    Seed.qw = TimeStampCounter();
+//#endif
     Seed.dw[1] ^= (uint32_t) GetTime();
     Init(&Seed, 8);
   }
