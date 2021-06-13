@@ -25,8 +25,12 @@
 		7E1ED2BC26620E8A000F0B0B /* red-pawn.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E1ED2AD26620E8A000F0B0B /* red-pawn.png */; };
 		7E1ED2E826628E61000F0B0B /* board.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E1ED2E726628E61000F0B0B /* board.png */; };
 		7E1ED2F0266291D1000F0B0B /* wbg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7E1ED2EF266291D1000F0B0B /* wbg.jpg */; };
+		7E21DE2A266F7ED400EA1A88 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E21DE27266F7ED400EA1A88 /* AlertView.swift */; };
+		7E21DE2B266F7ED400EA1A88 /* AlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E21DE29266F7ED400EA1A88 /* AlertView.xib */; };
 		7E4D93772668EB780062DCD9 /* AIEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E4094152668AD1500121233 /* AIEngine.framework */; };
 		7E4D93782668EB780062DCD9 /* AIEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7E4094152668AD1500121233 /* AIEngine.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7E6B6AF4266E642200EE1513 /* NewGameView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E6B6AF3266E642200EE1513 /* NewGameView.xib */; };
+		7E6B6AF7266E657300EE1513 /* NewGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6B6AF6266E657300EE1513 /* NewGameView.swift */; };
 		7E803AF2265FA0F4001224B1 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E803AF1265FA0F4001224B1 /* Game.swift */; };
 		7E868A382664E30600DF5FD1 /* bg-music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7E868A372664E30600DF5FD1 /* bg-music.mp3 */; };
 		7E8DC32B265A025100D8FE20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E8DC32A265A025100D8FE20 /* AppDelegate.swift */; };
@@ -48,6 +52,10 @@
 		7EAC1DC12664EE8200F33E78 /* draw.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EAC1DB52664EE8200F33E78 /* draw.mp3 */; };
 		7EAC1DC22664EE8200F33E78 /* eat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EAC1DB62664EE8200F33E78 /* eat.mp3 */; };
 		7EAC1DC32664EE8200F33E78 /* move.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EAC1DB72664EE8200F33E78 /* move.mp3 */; };
+		7EC2675726748152003F9845 /* StatusBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EC2675626748152003F9845 /* StatusBar.xib */; };
+		7EC2675926748322003F9845 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC2675826748322003F9845 /* StatusBar.swift */; };
+		7EC2675C2674C5CE003F9845 /* avatar1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7EC2675A2674C5CD003F9845 /* avatar1.jpg */; };
+		7EC2675D2674C5CE003F9845 /* avatar2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7EC2675B2674C5CE003F9845 /* avatar2.jpg */; };
 		7ECB12A526639E02006854DF /* MusicHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECB12A426639E02006854DF /* MusicHelper.swift */; };
 		7ECDA21B265FA2C7006FFB97 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECDA21A265FA2C7006FFB97 /* Utils.swift */; };
 		7ECDA21E265FA2ED006FFB97 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECDA21D265FA2ED006FFB97 /* Board.swift */; };
@@ -109,7 +117,11 @@
 		7E1ED2AD26620E8A000F0B0B /* red-pawn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-pawn.png"; sourceTree = "<group>"; };
 		7E1ED2E726628E61000F0B0B /* board.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = board.png; sourceTree = "<group>"; };
 		7E1ED2EF266291D1000F0B0B /* wbg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wbg.jpg; sourceTree = "<group>"; };
+		7E21DE27266F7ED400EA1A88 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		7E21DE29266F7ED400EA1A88 /* AlertView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlertView.xib; sourceTree = "<group>"; };
 		7E4094102668AD1500121233 /* AIEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIEngine.xcodeproj; path = AIEngine/AIEngine.xcodeproj; sourceTree = "<group>"; };
+		7E6B6AF3266E642200EE1513 /* NewGameView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewGameView.xib; sourceTree = "<group>"; };
+		7E6B6AF6266E657300EE1513 /* NewGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameView.swift; sourceTree = "<group>"; };
 		7E803AF1265FA0F4001224B1 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		7E868A372664E30600DF5FD1 /* bg-music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "bg-music.mp3"; sourceTree = "<group>"; };
 		7E8DC327265A025100D8FE20 /* cotuong-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cotuong-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +145,10 @@
 		7EAC1DB52664EE8200F33E78 /* draw.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = draw.mp3; sourceTree = "<group>"; };
 		7EAC1DB62664EE8200F33E78 /* eat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = eat.mp3; sourceTree = "<group>"; };
 		7EAC1DB72664EE8200F33E78 /* move.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = move.mp3; sourceTree = "<group>"; };
+		7EC2675626748152003F9845 /* StatusBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StatusBar.xib; sourceTree = "<group>"; };
+		7EC2675826748322003F9845 /* StatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBar.swift; sourceTree = "<group>"; };
+		7EC2675A2674C5CD003F9845 /* avatar1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = avatar1.jpg; sourceTree = "<group>"; };
+		7EC2675B2674C5CE003F9845 /* avatar2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = avatar2.jpg; sourceTree = "<group>"; };
 		7ECB12A426639E02006854DF /* MusicHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicHelper.swift; sourceTree = "<group>"; };
 		7ECDA21A265FA2C7006FFB97 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		7ECDA21D265FA2ED006FFB97 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
@@ -148,7 +164,7 @@
 		7ECDA23C265FB012006FFB97 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		7ECDA23F265FB01F006FFB97 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		7ECDA243265FB0B5006FFB97 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
-		7EE91C882665DEAC00703861 /* LunaFramework-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LunaFramework-Bridging-Header.h"; sourceTree = "<group>"; };
+		7EE91C882665DEAC00703861 /* Eleeye-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Eleeye-Bridging-Header.h"; sourceTree = "<group>"; };
 		7EF3BCA1266791A900B3DAAE /* Engine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Engine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -213,7 +229,7 @@
 				7E8DC333265A025100D8FE20 /* Assets.xcassets */,
 				7E8DC335265A025100D8FE20 /* LaunchScreen.storyboard */,
 				7E8DC338265A025100D8FE20 /* Info.plist */,
-				7EE91C882665DEAC00703861 /* LunaFramework-Bridging-Header.h */,
+				7EE91C882665DEAC00703861 /* Eleeye-Bridging-Header.h */,
 				7EF3BCA1266791A900B3DAAE /* Engine.swift */,
 			);
 			path = "cotuong-ios";
@@ -236,8 +252,14 @@
 		7E8DC368265A0C2F00D8FE20 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7E21DE27266F7ED400EA1A88 /* AlertView.swift */,
+				7E21DE29266F7ED400EA1A88 /* AlertView.xib */,
 				7E8DC36D265A0CAB00D8FE20 /* BoardView.swift */,
 				7E1ED27B2662086F000F0B0B /* PieceView.swift */,
+				7E6B6AF3266E642200EE1513 /* NewGameView.xib */,
+				7E6B6AF6266E657300EE1513 /* NewGameView.swift */,
+				7EC2675626748152003F9845 /* StatusBar.xib */,
+				7EC2675826748322003F9845 /* StatusBar.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -291,6 +313,8 @@
 			isa = PBXGroup;
 			children = (
 				7E1ED2A226620E89000F0B0B /* black-bishop.png */,
+				7EC2675A2674C5CD003F9845 /* avatar1.jpg */,
+				7EC2675B2674C5CE003F9845 /* avatar2.jpg */,
 				7E1ED2E726628E61000F0B0B /* board.png */,
 				7E1ED2EF266291D1000F0B0B /* wbg.jpg */,
 				7E1ED2AA26620E8A000F0B0B /* black-cannon.png */,
@@ -414,13 +438,16 @@
 				7EAC1DBB2664EE8200F33E78 /* capture.mp3 in Resources */,
 				7E8DC337265A025100D8FE20 /* LaunchScreen.storyboard in Resources */,
 				7E1ED2BA26620E8A000F0B0B /* black-pawn.png in Resources */,
+				7EC2675D2674C5CE003F9845 /* avatar2.jpg in Resources */,
 				7E1ED2B826620E8A000F0B0B /* black-guard.png in Resources */,
 				7EAC1DBA2664EE8200F33E78 /* win.mp3 in Resources */,
 				7E1ED2AF26620E8A000F0B0B /* red-bishop.png in Resources */,
 				7EAC1DB82664EE8200F33E78 /* move2.mp3 in Resources */,
+				7E21DE2B266F7ED400EA1A88 /* AlertView.xib in Resources */,
 				7E1ED2B926620E8A000F0B0B /* black-cannon.png in Resources */,
 				7EAC1DB92664EE8200F33E78 /* capture2.mp3 in Resources */,
 				7E1ED2B126620E8A000F0B0B /* black-bishop.png in Resources */,
+				7EC2675726748152003F9845 /* StatusBar.xib in Resources */,
 				7E1ED2F0266291D1000F0B0B /* wbg.jpg in Resources */,
 				7E1ED2B526620E8A000F0B0B /* black-horse.png in Resources */,
 				7E1ED2B626620E8A000F0B0B /* red-king.png in Resources */,
@@ -433,6 +460,7 @@
 				7E1ED2B226620E8A000F0B0B /* black-king.png in Resources */,
 				7EAC1DC12664EE8200F33E78 /* draw.mp3 in Resources */,
 				7EAC1DBC2664EE8200F33E78 /* loss.mp3 in Resources */,
+				7EC2675C2674C5CE003F9845 /* avatar1.jpg in Resources */,
 				7E8DC334265A025100D8FE20 /* Assets.xcassets in Resources */,
 				7EAC1DC02664EE8200F33E78 /* check.mp3 in Resources */,
 				7E1ED2B426620E8A000F0B0B /* red-guard.png in Resources */,
@@ -444,6 +472,7 @@
 				7E1ED2B726620E8A000F0B0B /* red-rook.png in Resources */,
 				7E8DC332265A025100D8FE20 /* Main.storyboard in Resources */,
 				7EAC1DC22664EE8200F33E78 /* eat.mp3 in Resources */,
+				7E6B6AF4266E642200EE1513 /* NewGameView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,10 +488,12 @@
 				7ECDA22B265FA34D006FFB97 /* Elephant.swift in Sources */,
 				7E803AF2265FA0F4001224B1 /* Game.swift in Sources */,
 				7EF3BCA2266791A900B3DAAE /* Engine.swift in Sources */,
+				7E21DE2A266F7ED400EA1A88 /* AlertView.swift in Sources */,
 				7ECDA23D265FB012006FFB97 /* SettingViewController.swift in Sources */,
 				7ECB12A526639E02006854DF /* MusicHelper.swift in Sources */,
 				7E8DC32B265A025100D8FE20 /* AppDelegate.swift in Sources */,
 				7ECDA21B265FA2C7006FFB97 /* Utils.swift in Sources */,
+				7EC2675926748322003F9845 /* StatusBar.swift in Sources */,
 				7ECDA240265FB01F006FFB97 /* GameViewController.swift in Sources */,
 				7E8DC32D265A025100D8FE20 /* SceneDelegate.swift in Sources */,
 				7ECDA231265FA360006FFB97 /* Rook.swift in Sources */,
@@ -474,6 +505,7 @@
 				7ECDA244265FB0B5006FFB97 /* StartViewController.swift in Sources */,
 				7E1ED27C2662086F000F0B0B /* PieceView.swift in Sources */,
 				7E8DC36E265A0CAB00D8FE20 /* BoardView.swift in Sources */,
+				7E6B6AF7266E657300EE1513 /* NewGameView.swift in Sources */,
 				7ECDA21E265FA2ED006FFB97 /* Board.swift in Sources */,
 				7ECDA234265FA37F006FFB97 /* Cannon.swift in Sources */,
 			);
@@ -637,7 +669,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sgt.cotuong-ios.cotuong-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/hnguyen/Dev/dev/projects/cotuong-ios/cotuong-ios/LunaFramework-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/hnguyen/Dev/dev/projects/cotuong-ios/cotuong-ios/Eleeye-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -664,7 +696,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sgt.cotuong-ios.cotuong-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/hnguyen/Dev/dev/projects/cotuong-ios/cotuong-ios/LunaFramework-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/hnguyen/Dev/dev/projects/cotuong-ios/cotuong-ios/Eleeye-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

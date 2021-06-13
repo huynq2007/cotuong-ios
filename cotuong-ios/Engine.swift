@@ -27,6 +27,20 @@ extension AIController {
     }
 }
 
+extension DispatchQueue {
+
+    static func background(delay: Double = 0.0, background: (()->Void)? = nil, completion: (() -> Void)? = nil) {
+        DispatchQueue.global(qos: .background).async {
+            background?()
+            if let completion = completion {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
+                    completion()
+                })
+            }
+        }
+    }
+}
+
 class AIController {
     private let taskQueue: DispatchQueue = DispatchQueue(label: "taskQueue")
     private let taskSignal: DispatchSemaphore = DispatchSemaphore(value: 1)
@@ -36,6 +50,10 @@ class AIController {
         engineInit("OPENBOOK.DAT")
         engineSetFEN(fen)
         self.gameLevel = gameLevel
+    }
+    
+    func setOptions(level: Int, moveFirst: Int) {
+        self.gameLevel = GameLevel(rawValue: Int32(level * 5)) ?? .EASY
     }
     
     private func toEleeyeMove(from: Point, to: Point) -> UInt32 {

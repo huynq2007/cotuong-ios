@@ -8,27 +8,46 @@
 import Foundation
 import UIKit
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, BoardMovingHandler {
     
     private var game: Game = Game()
     private var selectedPieces: [Point] = []
+    private var isReadyToStart = false
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // update screen display region
-        Config.DISPLAY_BOUND = self.view.bounds
-        
+        super.viewDidLoad()        
         startGame()
     }
     
     func startGame() {
-//        let fen = "4kae2/1H2a4/1c2e2c/9/9/9/9/1R2C4/4A4/4K4 w - - 0 1"
-//        game.newGame(fen: fen, level: .EASY)
-        game.newGame(fen: Config.DEFAULT_FEN, level: .HARD)
+        game.newGame(fen: Config.DEFAULT_FEN, level: .EASY)
         game.displayBoard(on: self)
+        (game.board as! Board).boardMovingHandler = self
         
-        registerTapHandler()
+        // handle start button on board
+        (game.board as! BoardView).onStartNewGameHandler = { (sender) -> () in
+            if self.isReadyToStart {
+                sender!.isHidden = true
+            } else {
+                sender!.isHidden = false
+                // display Option box
+                NewGameView.instance.showDialog()
+            }
+        }
+        
+        // display Option box before game start
+        NewGameView.instance.onCompleteHandler = { (result, level, moveFirst) -> () in
+            if result {
+                self.game.setGameOption(level: level, moveFirst: moveFirst)
+                self.registerTapHandler()
+                self.isReadyToStart = true
+            } else {
+                self.isReadyToStart = false
+            }
+            self.game.makeBoardReady(isReady: self.isReadyToStart)
+            (self.game.board as! BoardView).startButton?.isHidden = self.isReadyToStart
+        }
+        NewGameView.instance.showDialog()
     }
     
     func registerTapHandler() {
@@ -44,6 +63,11 @@ class GameViewController: UIViewController {
     }
     
     @objc func selectPiece(sender: Piece!) {
+        game.board?.foreachPiece(action: { (x, y) -> () in
+            let piece = game.board?.getPieceAt(x: x, y: y)
+            piece?.isSelected = false
+        })
+        sender.isSelected = true
         MusicHelper.instancePlayer.playSound(for: "click")
         self.selectedPieces.append(Point(x: sender.currentPosition!.x, y: sender.currentPosition!.y))
         if doMovingAction() {
@@ -71,48 +95,74 @@ class GameViewController: UIViewController {
         }
     }
     
-    func doMovingAction() -> Bool {
+    private func doMovingAction() -> Bool {
         
         if (game.board as! Board).MOVING_TURN == .BLACK {
             return false
         }
-        
+
         if (game.board as! Board).IS_GAME_OVER {
             return false
         }
-        
+
         if selectedPieces.count < 2 {
             return false
         }
-        
+
         if selectedPieces.count > 2 {
             selectedPieces.remove(at: 0)
         }
-        
+
+        return makingMovement()
+    }
+    
+    func makingMovement() -> Bool {
         let srcPoint = Point(x: selectedPieces[0].x, y: selectedPieces[0].y)
         let dstPoint = Point(x: selectedPieces[1].x, y: selectedPieces[1].y)
-        
+
         guard let srcPiece = game.board?.getPieceAt(x: srcPoint.x, y: srcPoint.y) else {
             return false
         }
-        guard let dstPiece = game.board?.getPieceAt(x: dstPoint.x, y: dstPoint.y) else {
-            if !srcPiece.moveTo(to: dstPoint) {
-                showToast(message: "Invalid Movement!")
-                MusicHelper.instancePlayer.playSound(for: "illegal")
-                return false
-            }
+        
+        guard let dstPiece = game.board?.getPieceAt(x: dstPoint.x, y: dstPoint.y) else {        
+            let result = srcPiece.moveTo(to: dstPoint)
+            handleResult(result: result)
             return true
         }
-        
+
         if srcPiece.pieceColor == dstPiece.pieceColor {
             return false
-        } else {
-            if !srcPiece.moveTo(to: dstPoint) {
-                showToast(message: "Invalid Movement!")
-                MusicHelper.instancePlayer.playSound(for: "illegal")
-                return false
-            }
-            return true
         }
+        
+        let result = srcPiece.moveTo(to: dstPoint)
+        handleResult(result: result)
+        return true
+    }
+    
+    func handleResult(result: MoveResult) {
+        switch result {
+        case .MOVE_CHECK:
+            MusicHelper.instancePlayer.playSound(for: "check2")
+        case .MOVE_DRAW:
+            MusicHelper.instancePlayer.playSound(for: "draw")
+            AlertView.instance.showAlert(title: "CoTuong", message: "Game is Draw!", alertType: .success)
+        case .MOVE_INVALID:
+            showToast(message: "Invalid Movement!")
+            MusicHelper.instancePlayer.playSound(for: "illegal")
+        case .MOVE_MATE:
+            let music = (game.board as! Board).MOVING_TURN == .RED ? "loss" : "win"
+            let message = (game.board as! Board).MOVING_TURN == .RED ? "You lose!" : "You win!"
+            MusicHelper.instancePlayer.playSound(for: music)
+            AlertView.instance.showAlert(title: "CoTuong", message: message, alertType: .normal)
+        case .MOVE_NORMAL:
+            MusicHelper.instancePlayer.playSound(for: "move")
+        case .MOVE_NONE:
+            break
+        }
+    }
+    
+    func onBoardMovingComplete() {
+        let result = (game.board as! Board).AIMove()
+        handleResult(result: result)
     }
 }

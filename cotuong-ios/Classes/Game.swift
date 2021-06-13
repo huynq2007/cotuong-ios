@@ -20,6 +20,18 @@ class Game {
         board?.displayBoard(parent: view)
     }
     
+    func makeBoardReady(isReady: Bool = false) {
+        board?.foreachPiece(action: {
+            (x, y) -> () in
+            let piece = board?.getPieceAt(x: x, y: y)
+            piece?.isHidden = !isReady
+        })
+    }
+    
+    func setGameOption(level: Int, moveFirst: Int) {
+        (board as! Board).AI?.setOptions(level: level, moveFirst: moveFirst)
+    }
+    
     func createBoardFromFenStr(fen: String) -> IBoard {
         let board: IBoard = Board() as IBoard
         let factory: Factory = Factory(board: board)

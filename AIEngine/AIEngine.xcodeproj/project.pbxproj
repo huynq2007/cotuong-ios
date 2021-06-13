@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E21DE2F266FBDFF00EA1A88 /* BOOK.DAT in Resources */ = {isa = PBXBuildFile; fileRef = 7E40955C2668B2A200121233 /* BOOK.DAT */; };
 		7E40940A2668AD1500121233 /* AIEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E4094082668AD1500121233 /* AIEngine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7E4095C52668B2A300121233 /* book.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E4094322668B2A100121233 /* book.h */; };
 		7E4095C72668B2A300121233 /* ucci.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E4094342668B2A100121233 /* ucci.h */; };
@@ -1225,6 +1226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E4096D92668B2A500121233 /* OPENBOOK.DAT in Resources */,
+				7E21DE2F266FBDFF00EA1A88 /* BOOK.DAT in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

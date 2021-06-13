@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StatusBar" customModule="cotuong_ios" customModuleProvider="target">
+            <connections>
+                <outlet property="avatar1" destination="tzM-d4-JHE" id="5uX-9T-jS6"/>
+                <outlet property="avatar2" destination="vZ6-Iu-a6l" id="7zh-mH-1iE"/>
+                <outlet property="clock1" destination="Abr-iC-M17" id="v7Q-XD-u1r"/>
+                <outlet property="clock2" destination="HuN-On-xlg" id="4rd-09-jOC"/>
+                <outlet property="parentView" destination="ykD-K3-XDD" id="Xn4-QR-wID"/>
+                <outlet property="statusText" destination="dYa-Wd-gJz" id="6k5-ja-EPK"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="ykD-K3-XDD" userLabel="parentView">
+            <rect key="frame" x="0.0" y="0.0" width="371" height="23"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="EcM-dj-l9b">
+                    <rect key="frame" x="0.0" y="0.0" width="371" height="23"/>
+                    <subviews>
+                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="avatar1.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="tzM-d4-JHE" userLabel="avatar1">
+                            <rect key="frame" x="-60" y="0.0" width="60" height="23"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="60" id="uNv-NY-TYo"/>
+                            </constraints>
+                        </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clock" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Abr-iC-M17" userLabel="clock1">
+                            <rect key="frame" x="0.0" y="0.99999999999999822" width="60" height="21.666666666666664"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="60" id="pcc-2E-Gfu"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Computer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dYa-Wd-gJz" userLabel="statusText">
+                            <rect key="frame" x="60" y="0.0" width="251" height="23"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" systemColor="systemPinkColor"/>
+                            <color key="highlightedColor" systemColor="systemPinkColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clock" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="HuN-On-xlg" userLabel="clock2">
+                            <rect key="frame" x="311" y="0.99999999999999822" width="60" height="21.666666666666664"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="60" id="HdS-eK-0SL"/>
+                            </constraints>
+                        </imageView>
+                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="avatar2.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="vZ6-Iu-a6l" userLabel="avatar2">
+                            <rect key="frame" x="371" y="0.0" width="60" height="23"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="60" id="2xh-1K-xv3"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="eSi-Db-3tv"/>
+            <constraints>
+                <constraint firstItem="EcM-dj-l9b" firstAttribute="leading" secondItem="ykD-K3-XDD" secondAttribute="leading" id="1Jd-s4-pfY"/>
+                <constraint firstItem="eSi-Db-3tv" firstAttribute="bottom" secondItem="EcM-dj-l9b" secondAttribute="bottom" id="72G-aQ-k9G"/>
+                <constraint firstItem="EcM-dj-l9b" firstAttribute="top" secondItem="ykD-K3-XDD" secondAttribute="top" id="Y1a-JS-V2K"/>
+                <constraint firstAttribute="trailing" secondItem="EcM-dj-l9b" secondAttribute="trailing" id="gaq-xi-FKh"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-1161.5942028985507" y="267.79891304347831"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="avatar1.jpg" width="11.520000457763672" height="14.399999618530273"/>
+        <image name="avatar2.jpg" width="11.520000457763672" height="14.399999618530273"/>
+        <image name="clock" catalog="system" width="128" height="121"/>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

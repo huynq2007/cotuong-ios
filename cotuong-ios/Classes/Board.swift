@@ -8,8 +8,12 @@
 import Foundation
 import UIKit
 
+protocol BoardMovingHandler {
+    func onBoardMovingComplete()
+}
+
 protocol IBoard {
-    func makeMovement(piece: Piece, to position: Point) -> Bool
+    func makeMovement(piece: Piece, to position: Point) -> MoveResult
     func addPiece(piece: Piece, to position: Point?) -> Bool
     func displayBoard(parent view: UIViewController) -> ()
     func getPieceAt(x: Int, y: Int) -> Piece?
@@ -19,10 +23,20 @@ protocol IBoard {
 class Board: BoardView, IBoard {
     
     final var AI: AIController?
-    
     private var parentController: UIViewController?
+    var boardMovingHandler: BoardMovingHandler?
     
-    var MOVING_TURN: PieceColor = .RED
+    private var _movingTurn: PieceColor = .RED
+    var MOVING_TURN: PieceColor {
+        get {
+            return _movingTurn
+        }
+        set (turn) {
+            _movingTurn = turn
+            updateMovingStatus()
+        }
+    }
+    
     var IS_GAME_OVER: Bool = false
     
     required init?(coder: NSCoder) {
@@ -34,6 +48,7 @@ class Board: BoardView, IBoard {
     init() {
         super.init(frame: .zero)        
     }
+    
     func setAIEngine(AI: AIController) {
         self.AI = AI
     }
@@ -50,40 +65,26 @@ class Board: BoardView, IBoard {
         return false
     }
     
-    func makeMovement(piece: Piece, to position: Point) -> Bool {
-        
-        if IS_GAME_OVER {
-            return false
-        }
+    func makeMovement(piece: Piece, to position: Point) -> MoveResult {
         
         let _from = Point(x: piece.currentPosition!.x, y: piece.currentPosition!.y)
         let _to = Point(x: position.x, y: position.y)
         let _targetPiece = boardState[position.y][position.x]
         
         if !isValidMovement(of: piece, to: position) {
-            return false
+            return MoveResult.MOVE_INVALID
         }
         if let _ = _targetPiece {
             if !removePiece(piece: _targetPiece!) {
-                return false
+                return MoveResult.MOVE_INVALID
             }
         }
         if !removePiece(piece: piece) {
-            return false
+            return MoveResult.MOVE_INVALID
         }
         if !addPiece(piece: piece, to: position) {
-            return false
+            return MoveResult.MOVE_INVALID
         }
-        
-        // Change Turn
-        if self.MOVING_TURN == .RED {
-            self.MOVING_TURN = .BLACK
-        }else {
-            self.MOVING_TURN = .RED
-        }
-        
-        // update engine state
-        let _ = self.AI?.makeEngineMove(from: _from, to: _to)
         
         // update GUI
         UIView.animate(withDuration: 0.4, delay: 0, options: [AnimationOptions.transitionCrossDissolve], animations: {
@@ -94,45 +95,44 @@ class Board: BoardView, IBoard {
             piece.isSelected = false
             _targetPiece?.removeFromSuperview()
             
-            if (self.AI!.validateMateStatus()) {
-                if self.MOVING_TURN == .BLACK {
-                    self.IS_GAME_OVER = true
-                    MusicHelper.instancePlayer.playSound(for: "win")
-                    self.showAlertDialog(message: "You win!")
-                } else {
-                    self.IS_GAME_OVER = true
-                    MusicHelper.instancePlayer.playSound(for: "loss")
-                    self.showAlertDialog(message: "You lose!")
-                }
-                return
-            } else if (self.AI!.validateCheckingStatus()) {
-                MusicHelper.instancePlayer.playSound(for: "check2")
-            } else if (self.AI!.validateDrawStatus()) {
-                self.IS_GAME_OVER = true
-                MusicHelper.instancePlayer.playSound(for: "draw")
-                self.showAlertDialog(message: "Draw game!")
-            } else {
-                MusicHelper.instancePlayer.playSound(for: "move")
-                
-                // wait for AI move
-                self.AIMove()
-            }
+            self.boardMovingHandler?.onBoardMovingComplete()
         }
         
-        #if DEBUG
-        displayBoardString()
-        #endif
+        // update engine state
+        let _ = self.AI?.makeEngineMove(from: _from, to: _to)
         
-        return true
+        // Change Turn
+        if self.MOVING_TURN == .RED {
+            self.MOVING_TURN = .BLACK
+        }else {
+            self.MOVING_TURN = .RED
+        }
+        
+        if (self.AI!.validateMateStatus()) {
+            self.IS_GAME_OVER = true
+            return MoveResult.MOVE_MATE
+        }
+        
+        if (self.AI!.validateCheckingStatus()) {
+            return MoveResult.MOVE_CHECK
+        }
+        
+        if (self.AI!.validateDrawStatus()) {
+            self.IS_GAME_OVER = true
+            return MoveResult.MOVE_DRAW
+        }
+        
+        return MoveResult.MOVE_NORMAL
     }
     
-    func AIMove() {
+    func AIMove() -> MoveResult {
         if self.MOVING_TURN == .BLACK {
-            guard let (from, to) = self.AI?.tryThink() else { return }
+            guard let (from, to) = self.AI?.tryThink() else { return MoveResult.MOVE_NONE }
             if let piece = self.getPieceAt(x: from.x, y: from.y) {
-                let _ = self.makeMovement(piece: piece, to: to)
+                return self.makeMovement(piece: piece, to: to)
             }
         }
+        return MoveResult.MOVE_NONE
     }
     
     func addPiece(piece: Piece, to position: Point? = nil) -> Bool {
@@ -156,47 +156,15 @@ class Board: BoardView, IBoard {
         self.frame = view.view.frame
         view.view.addSubview(self)
         
-        // display pieces
+        // positioning all pieces
         foreachPiece(action: { (x, y) in
             if let piece = boardState[y][x] {
                 piece.frame = CGRect(origin: .zero, size: CGSize(width: Config.PIECE_SIZE, height: Config.PIECE_SIZE))
-                piece.center = piece.currentPosition!.toScreenCoordinate()
+                piece.center = piece.currentPosition!.toScreenCoordinate()                
+                piece.isHidden = true
                 view.view.addSubview(piece)
             }
         })
     }
-    
-    func displayBoardString() -> () {
-        for y in 0..<Config.Y_SIZE {
-            var line: String = ""
-            for x in 0..<Config.X_SIZE {
-                if let piece = boardState[y][x] {
-                    line += String(describing: piece)
-                } else {
-                    line += " [-,-,-] "
-                }
-            }
-            print(line)
-        }
-    }
 }
 
-extension Board {
-    func foreachPiece(action: (_ x: Int, _ y: Int)->()) {
-        for y in 0..<Config.Y_SIZE {
-            for x in 0..<Config.X_SIZE {
-                action(x, y)
-            }
-        }
-    }
-    
-    func showAlertDialog(message: String) {
-        let alert = UIAlertController(title: "Cotuong-iOS", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-            alert.removeFromParent()
-        }))
-        if let _ = self.parentController {
-            self.parentController?.present(alert, animated: true, completion: nil)
-        }
-    }
-}

@@ -34,11 +34,10 @@ class Piece: PieceView, IPiece {
         self.setImage(UIImage(named: "cursor"), for: .selected)
     }
     
-//    override var description: String { return "\(pieceColor!.rawValue) [\(fenChar),\(String(describing: currentPosition!.x)),\(String(describing: currentPosition!.y))] \(PieceColor.CLEAR.rawValue)"}
     override var description: String { return " [\(fenChar),\(String(describing: currentPosition!.x)),\(String(describing: currentPosition!.y))] "}
     
     
-    final func moveTo(to position: Point) -> Bool {
+    final func moveTo(to position: Point) -> MoveResult {
         return board!.makeMovement(piece: self, to: position)
     }
     

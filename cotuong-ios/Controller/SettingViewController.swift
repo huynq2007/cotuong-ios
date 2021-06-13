@@ -21,7 +21,7 @@ class SettingViewController: UIViewController {
             MusicHelper.backgroundPlayer.stopBackgroundMusic()
         }else {
             MusicHelper.backgroundPlayer.playBackgroundMusic()
-        }
+        }        
     }
     
 }
